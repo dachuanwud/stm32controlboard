@@ -1,0 +1,53 @@
+# 忽略STM32 HAL驱动库
+/Drivers
+
+# 忽略Keil MDK编译输出和临时文件
+/MDK-ARM/my_car
+/MDK-ARM/*.uvguix.*
+/MDK-ARM/*.scvd
+/MDK-ARM/*.uvoptx.bak
+/MDK-ARM/*.uvprojx.bak
+/MDK-ARM/*.dep
+/MDK-ARM/JLinkLog.txt
+/MDK-ARM/JLinkSettings.ini
+/MDK-ARM/DebugConfig
+
+# 忽略编译生成的文件
+*.o
+*.d
+*.crf
+*.axf
+*.bin
+*.hex
+*.lnp
+*.lst
+*.map
+*.sct
+*.htm
+*.dep
+*.bak
+
+# 忽略IAR生成的文件（如果有）
+*.ewd
+*.ewp
+*.eww
+*.ewt
+*.dep
+*.map
+*.pbi
+*.pbi.cout
+*.pbd
+*.pbd.browse
+
+# 忽略编辑器临时文件
+*.swp
+*~
+.vscode/
+.idea/
+
+# 忽略日志文件
+*.log
+
+# 忽略系统临时文件
+.DS_Store
+Thumbs.db
