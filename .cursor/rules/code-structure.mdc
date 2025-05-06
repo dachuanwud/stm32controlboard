@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# STM32控制板代码结构
+
+## 项目目录结构
+
+- **Core/**: 核心应用代码
+  - **Inc/**: 头文件目录
+  - **Src/**: 源文件目录
+- **Drivers/**: STM32 HAL库驱动文件
+  - **CMSIS/**: ARM Cortex微控制器接口标准
+  - **STM32F1xx_HAL_Driver/**: STM32 F1系列HAL驱动
+- **MDK-ARM/**: Keil MDK项目文件
+
+## 核心源文件
+
+- [main.c](mdc:Core/Src/main.c): 主程序入口，包含初始化和主循环
+- [channel_parse.c](mdc:Core/Src/channel_parse.c): 遥控器通道和命令解析功能，包含驱动方式选择
+
+## 电机驱动实现
+
+所有驱动实现都在Core/Src目录下，通过在[channel_parse.c](mdc:Core/Src/channel_parse.c)中的宏定义选择使用哪种驱动：
+
+- [drv_keyadouble.c](mdc:Core/Src/drv_keyadouble.c): 双路CAN总线电机驱动（默认）
+- [drv_keya.c](mdc:Core/Src/drv_keya.c): 单路CAN总线电机驱动
+- [drv_real.c](mdc:Core/Src/drv_real.c): RS485协议电机驱动
+- [drv_toy.c](mdc:Core/Src/drv_toy.c): 玩具级电机驱动
+- [drv_shb.c](mdc:Core/Src/drv_shb.c): SHB电机驱动
+
+## 系统配置
+
+- [stm32f1xx_hal_msp.c](mdc:Core/Src/stm32f1xx_hal_msp.c): HAL库底层初始化
+- [stm32f1xx_it.c](mdc:Core/Src/stm32f1xx_it.c): 中断服务程序
+- [system_stm32f1xx.c](mdc:Core/Src/system_stm32f1xx.c): 系统初始化
+
+## 配置文件
+
+- [main.h](mdc:Core/Inc/main.h): 主头文件，包含引脚定义和全局函数声明
+- [stm32f1xx_hal_conf.h](mdc:Core/Inc/stm32f1xx_hal_conf.h): HAL库配置
+- [my_car.ioc](mdc:my_car.ioc): STM32CubeMX项目配置文件

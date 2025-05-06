@@ -1,0 +1,56 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# STM32控制板驱动配置
+
+## 驱动类型选择
+
+项目支持多种电机驱动方式，通过在[channel_parse.c](mdc:Core/Src/channel_parse.c)文件中修改宏定义来选择：
+
+```c
+// 驱动类型，选择需要的驱动
+// #define DRV_TOY
+// #define DRV_SHB
+#define DRV_KEYADOUBLE  // 当前默认使用的双路CAN驱动
+// #define DRV_KEYA
+// #define DRV_REAL
+```
+
+## 支持的驱动类型
+
+1. **DRV_KEYADOUBLE**：双路CAN总线电机驱动
+   - 实现文件：[drv_keyadouble.c](mdc:Core/Src/drv_keyadouble.c)
+   - 特点：通过CAN总线控制LKBLS481502双路电机驱动器
+   - 适用于：带CAN总线接口的双通道驱动器
+
+2. **DRV_KEYA**：单路CAN总线电机驱动
+   - 实现文件：[drv_keya.c](mdc:Core/Src/drv_keya.c)
+   - 特点：通过CAN总线控制单通道电机驱动器
+   - 适用于：带CAN总线接口的单通道驱动器
+
+3. **DRV_REAL**：RS485协议电机驱动
+   - 实现文件：[drv_real.c](mdc:Core/Src/drv_real.c)
+   - 特点：通过RS485总线和Modbus协议控制电机
+   - 适用于：支持RS485/Modbus的驱动器
+
+4. **DRV_TOY**：玩具级电机驱动
+   - 实现文件：[drv_toy.c](mdc:Core/Src/drv_toy.c)
+   - 特点：简单PWM控制，适合低成本应用
+   - 适用于：简单直驱电机或玩具级驱动板
+
+5. **DRV_SHB**：SHB电机驱动
+   - 实现文件：[drv_shb.c](mdc:Core/Src/drv_shb.c)
+   - 特点：专用SHB驱动接口
+   - 适用于：使用SHB控制协议的电机驱动器
+
+## 驱动接口函数
+
+所有驱动都实现了统一的接口函数：
+
+```c
+uint8_t intf_move_xxx(int8_t speed_left, int8_t speed_right);
+```
+
+参数范围：-100至+100，表示电机速度百分比。

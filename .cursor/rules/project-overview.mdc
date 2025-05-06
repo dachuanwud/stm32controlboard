@@ -1,0 +1,37 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# STM32控制板项目概述
+
+本项目是一个基于STM32F1系列微控制器的电机控制板系统，主要用于小车/机器人平台控制。该系统支持多种控制信号输入（遥控器、串口命令）和多种电机驱动方式（CAN总线、RS485、PWM直接驱动等）。
+
+## 核心文件
+
+- 主程序入口：[main.c](mdc:Core/Src/main.c)
+- 控制逻辑：[channel_parse.c](mdc:Core/Src/channel_parse.c)
+- 默认电机驱动（双路CAN）：[drv_keyadouble.c](mdc:Core/Src/drv_keyadouble.c)
+
+## 功能模块
+
+1. **控制信号接收**：
+   - SBus遥控器信号（UART4）
+   - 命令控制指令（UART5）
+
+2. **电机驱动**：
+   - 默认使用双路CAN总线驱动（[drv_keyadouble.c](mdc:Core/Src/drv_keyadouble.c)）
+   - 可切换至其他驱动方式（修改[channel_parse.c](mdc:Core/Src/channel_parse.c)中的宏定义）
+
+3. **调试接口**：
+   - 通过USART1实现调试信息输出
+
+## 硬件资源
+
+- 微控制器：STM32F1系列
+- 通信接口：
+  - CAN：电机控制
+  - USART1：调试
+  - USART3：RS485
+  - UART4：SBus接收
+  - UART5：命令接收

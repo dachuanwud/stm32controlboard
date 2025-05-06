@@ -202,12 +202,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     HAL_Delay(100);
-    // 发送g_cmd_pt的值到UART5
-    char buffer[20];
-    sprintf(buffer, "g_cmd_pt=%d\r\n", g_cmd_pt);
-    HAL_UART_Transmit(&huart5, (uint8_t*)buffer, strlen(buffer), 100);
+
     
     if ((g_sbus_pt & 0x80) != 0) {
+      // 发送g_cmd_pt的值到UART5
+      char buffer[20];
+      sprintf(buffer, "g_cmd_pt=%d\r\n", g_cmd_pt);
+      HAL_UART_Transmit(&huart5, (uint8_t*)buffer, strlen(buffer), 100);
 			// sbus收到数据，解析  
       parse_sbus_msg(ch_val);
       parse_chan_val(ch_val); 

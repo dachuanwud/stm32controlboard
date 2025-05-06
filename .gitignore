@@ -1,5 +1,4 @@
-# 忽略STM32 HAL驱动库
-/Drivers
+
 
 # 忽略Keil MDK编译输出和临时文件
 /MDK-ARM/my_car
