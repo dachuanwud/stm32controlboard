@@ -205,13 +205,33 @@ int main(void)
 
     
     if ((g_sbus_pt & 0x80) != 0) {
-      // 发送g_cmd_pt的值到UART5
-      char buffer[20];
-      sprintf(buffer, "g_cmd_pt=%d\r\n", g_cmd_pt);
-      HAL_UART_Transmit(&huart5, (uint8_t*)buffer, strlen(buffer), 100);
-			// sbus收到数据，解析  
+    //   // 发送g_cmd_pt的值到UART5
+    //   char buffer[20];
+    //   sprintf(buffer, "g_cmd_pt=%d\r\n", g_cmd_pt);
+    //   HAL_UART_Transmit(&huart5, (uint8_t*)buffer, strlen(buffer), 100);
+      HAL_GPIO_TogglePin(led_blue_GPIO_Port, led_blue_Pin); // 切换蓝灯状态实现闪烁
+			// sbus收到数据，解析
       parse_sbus_msg(ch_val);
-      parse_chan_val(ch_val); 
+
+      // 打印解析后的SBUS通道值到UART5
+      char sbus_print_buffer[256]; 
+      int sbus_offset = 0;
+      // 初始化缓冲区，确保是空字符串开始，或确保sprintf不会读取未初始化内存
+      sbus_print_buffer[0] = '\0'; 
+
+      sbus_offset += sprintf(sbus_print_buffer + sbus_offset, "SBUS Channels (UART5):\r\n");
+      for (int i = 0; i < LEN_CHANEL; i++) {
+        // 检查缓冲区是否足够容纳下一个通道信息 (估算每个通道信息约15-20字节)
+        if (sbus_offset < (sizeof(sbus_print_buffer) - 20)) { 
+            sbus_offset += sprintf(sbus_print_buffer + sbus_offset, "CH%d: %u\r\n", i + 1, ch_val[i]);
+        } else {
+            // 如果缓冲区不足，则停止添加更多信息
+            break; 
+        }
+      }
+      HAL_UART_Transmit(&huart5, (uint8_t*)sbus_print_buffer, sbus_offset, 100); // 使用 sbus_offset作为长度
+      
+      parse_chan_val(ch_val);
       g_sbus_pt = 0; // 清0，继续下一帧数据的接收
 		}
     

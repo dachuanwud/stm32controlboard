@@ -56,6 +56,19 @@ static void keya_send_data(uint32_t id, uint8_t* data)
     HAL_UART_Transmit(&huart5, (uint8_t*)buffer, strlen(buffer), 100);
   }
   HAL_UART_Transmit(&huart5, (uint8_t*)"\r\n", 2, 100);
+
+  // 如果是速度命令 (0x23 0x00 0x20 channel speed_bytes)
+  if (data[0] == 0x23 && data[1] == 0x00 && data[2] == 0x20) {
+    int32_t sp_value_tx = ((int32_t)data[4] << 24) | \
+                          ((int32_t)data[5] << 16) | \
+                          ((int32_t)data[6] << 8)  | \
+                          ((int32_t)data[7]);
+    int8_t actual_speed = (int8_t)(sp_value_tx / 100);
+    char speed_buffer[50];
+    uint8_t channel = data[3];
+    sprintf(speed_buffer, "Speed CMD Ch%d: %d\r\n", channel, actual_speed);
+    HAL_UART_Transmit(&huart5, (uint8_t*)speed_buffer, strlen(speed_buffer), 100);
+  }
   
   HAL_Delay(10); 
 }
@@ -141,19 +154,6 @@ uint8_t intf_move_keyadouble(int8_t speed_left, int8_t speed_right)
   } else {
     bk_flag_right = 0; // 0为抱闸，1为松开
   }
-
-  // 静态变量记录上次命令时间，保证看门狗不超时
-  static uint32_t last_cmd_time = 0;
-  uint32_t current_time = HAL_GetTick();
-  
-  // 如果距离上次命令超过900ms，需要重新使能电机
-  if (current_time - last_cmd_time > 900) {
-    motor_control(CMD_ENABLE, MOTOR_CHANNEL_A, 0);  // 使能A路(左轮)
-    motor_control(CMD_ENABLE, MOTOR_CHANNEL_B, 0);  // 使能B路(右轮)
-  }
-  
-  // 更新发送时间
-  last_cmd_time = current_time;
 
   // 使能左右两路电机
   motor_control(CMD_ENABLE, MOTOR_CHANNEL_A, 0);  // 使能A路(左轮)
