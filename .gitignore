@@ -1,7 +1,8 @@
 
+# STM32项目通用忽略文件
 
 # 忽略Keil MDK编译输出和临时文件
-/MDK-ARM/my_car
+/MDK-ARM/my_car/
 /MDK-ARM/*.uvguix.*
 /MDK-ARM/*.scvd
 /MDK-ARM/*.uvoptx.bak
@@ -9,7 +10,23 @@
 /MDK-ARM/*.dep
 /MDK-ARM/JLinkLog.txt
 /MDK-ARM/JLinkSettings.ini
-/MDK-ARM/DebugConfig
+/MDK-ARM/DebugConfig/
+
+# 忽略STM32CubeIDE生成的文件和目录
+.metadata/
+.settings/
+Debug/
+Release/
+.launch
+language.settings.xml
+*.launch
+
+# 忽略Eclipse项目文件
+.cproject
+.project
+
+# 忽略STM32CubeIDE链接脚本
+*.ld
 
 # 忽略编译生成的文件
 *.o
@@ -25,14 +42,15 @@
 *.htm
 *.dep
 *.bak
+*.su
+*.cyclo
+*.elf
 
 # 忽略IAR生成的文件（如果有）
 *.ewd
 *.ewp
 *.eww
 *.ewt
-*.dep
-*.map
 *.pbi
 *.pbi.cout
 *.pbd
@@ -50,3 +68,8 @@
 # 忽略系统临时文件
 .DS_Store
 Thumbs.db
+
+# 忽略自动生成的系统文件
+Core/Src/syscalls.c
+Core/Src/sysmem.c
+Core/Startup/
